@@ -9,6 +9,7 @@ pub struct Post {
 
 impl Post {
     /// Create a new post.
+    #[must_use]
     pub fn new(writer: &str, content: &str) -> Self {
         Self {
             writer: writer.to_owned(),

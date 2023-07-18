@@ -18,6 +18,6 @@ pub async fn init_app() -> (Router, Options) {
 
     // Add any additional prep..
 
-    let service = Service::from_options(&options).await.unwrap();
+    let service = Service::from_options(&options).unwrap();
     (service.router(), options)
 }

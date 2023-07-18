@@ -41,15 +41,22 @@ impl std::ops::Deref for Service {
 
 impl Service {
     /// Makes the service from options.
-    pub async fn from_options(options: &Options) -> Result<Self> {
+    pub fn from_options(options: &Options) -> Result<Self> {
         Ok(Self(Arc::new(ServiceInner {
             options: options.clone(),
         })))
     }
 
+    // This function will be updated..
+    #[allow(clippy::unwrap_used)]
     /// Serves the frontend.
     ///
     /// This is just a boilerplate and will be improved..
+    ///
+    /// # Panics
+    ///
+    /// This function has panics because it is in development.
+    /// Those will be removed.
     pub async fn serve_frontend(req: Request<Body>, static_dir: Utf8PathBuf) -> impl IntoResponse {
         match ServeDir::new(&static_dir).oneshot(req).await {
             Ok(res) => {
@@ -88,7 +95,7 @@ impl Service {
         Router::new()
             .route("/health", get(health))
             .nest("/api/v1", v1::routes())
-            .fallback_service(get(|req| Service::serve_frontend(req, static_dir)))
+            .fallback_service(get(|req| Self::serve_frontend(req, static_dir)))
             .layer(CorsLayer::very_permissive())
             .layer(TraceLayer::new_for_http())
             .layer(DefaultBodyLimit::max(DEFAULT_BODY_LIMIT))

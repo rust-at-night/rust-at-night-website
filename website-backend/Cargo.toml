@@ -2,6 +2,12 @@
 name = "website-backend"
 version = "0.1.0"
 edition = "2021"
+description = "Backend for the rust-at-night website"
+repository = "https://github.com/rust-at-night/rust-at-night-website"
+readme = "../README.md"
+license = "MIT"
+license-file = "../LICENSE"
+
 
 [[bin]]
 name = "website-backend"

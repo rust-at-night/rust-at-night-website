@@ -20,7 +20,7 @@ impl Error {
 
     /// The default status code for all errors is `INTERNAL_SERVER_ERROR`.
     /// Override this method to provide a different status code for a different error type.
-    fn status(&self) -> StatusCode {
+    const fn status(&self) -> StatusCode {
         match self {
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         }
@@ -46,10 +46,11 @@ impl Error {
         }
     }
 
+    #[allow(clippy::unused_self)]
     /// Determine if this error should result in a trace event.
     ///
     /// Match on the error type and return false if it should not be traced.
-    fn trace(&self) -> bool {
+    const fn trace(&self) -> bool {
         true
     }
 }

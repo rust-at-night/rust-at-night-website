@@ -9,12 +9,14 @@ use url::Url;
 
 /// Aws Options
 #[derive(Clone, Debug, Args)]
+#[non_exhaustive]
 pub struct AwsOptions {
     // TODO: Environment variables about Aws when the infra is ready.
 }
 
 /// Service Options
 #[derive(Clone, Debug, Parser)]
+#[non_exhaustive]
 pub struct Options {
     /// Socket address to listen on
     #[clap(short, long, env = "ADDR", default_value = "0.0.0.0:8081")]
@@ -41,7 +43,6 @@ impl Options {
     /// Initializes a service from the given options.
     pub async fn make_service(&self) -> Result<()> {
         let state = Service::from_options(self)
-            .await
             .context("Making the service considering given options..")?;
 
         state.run().await.context("Running service")
@@ -51,16 +52,15 @@ impl Options {
     pub fn tracing_setup(&self) {
         let filter_layer = EnvFilter::try_from_default_env()
             .or_else(|_| EnvFilter::try_new("info"))
-            .unwrap();
+            .expect("Unable to setup tracing filter layer.");
 
         tracing_subscriber::registry()
             .with(filter_layer)
-            .with(self.tracing_layers())
+            .with(Self::tracing_layers())
             .init();
     }
 
     fn tracing_layers<S: Subscriber + Send + Sync + for<'span> LookupSpan<'span>>(
-        &self,
     ) -> Vec<Box<dyn Layer<S> + Send + Sync + 'static>> {
         #[allow(unused_mut)]
         let mut layers = vec![
