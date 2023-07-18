@@ -1,7 +1,9 @@
 name: CI
 
+# Currently the CI is a place holder which only conducts a clippy check.
+
 on:
-  # The push event with branches specifies that the workflow should run on any push to the main and develop branches
+  # The push event with branches specifies that the workflow should run on any push to the main branch.
   push:
     branches:
       - main
@@ -13,10 +15,10 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  test_pr:
+  test_recent_push:
     if: ${{ github.ref != 'refs/heads/main' }}
 
-    # We don't want this behaviour on main and develop branches so we nest it here.
+    # We don't want this behaviour on main branch so we nest it here.
     concurrency:
       # The group which will be effected from the concurrency settings.
       #
@@ -24,7 +26,7 @@ jobs:
       # or the PR merge branch for a pull_request event (like refs/pull/:prNumber/merge).
       #
       # The `github.workflow` keeps this setting in the scope of the workflow.
-      group: ${{ github.workflow }}-${{ github.ref }}-test_latest_push
+      group: ${{ github.workflow }}-${{ github.ref }}-test_recent_push
       # For any new push to the same branch (regardless of whether a PR is open or not),
       # it will cancel the workflow runs associated with the previous push to that same branch,
       # because they share the same github.ref.
