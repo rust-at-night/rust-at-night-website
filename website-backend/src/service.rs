@@ -2,14 +2,17 @@ use crate::{
     api::{health, v1},
     Options,
 };
-use axum::body::{boxed, Body};
-use axum::response::IntoResponse;
-use axum::{extract::DefaultBodyLimit, response::Response, routing::get, Router, Server};
+use axum::{
+    body::{boxed, Body},
+    extract::DefaultBodyLimit,
+    response::{IntoResponse, Response},
+    routing::get,
+    Router, Server,
+};
 use camino::Utf8PathBuf;
 use color_eyre::Result;
 use hyper::{Request, StatusCode};
-use std::net::SocketAddr;
-use std::sync::Arc;
+use std::{net::SocketAddr, sync::Arc};
 use tokio::select;
 use tower::ServiceExt;
 use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};

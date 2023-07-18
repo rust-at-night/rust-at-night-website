@@ -7,9 +7,9 @@ use axum::{
     http::{Request, StatusCode},
 };
 use serde_json::Value;
+use serial_test::serial;
 use std::net::TcpListener;
 use website_backend_lib::data::post::Post;
-use serial_test::serial;
 
 #[test]
 #[serial]

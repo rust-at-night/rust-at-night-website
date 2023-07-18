@@ -1,7 +1,5 @@
-use crate::Service;
-use crate::{data::post::Post, error::Error};
+use crate::{data::post::Post, error::Error, Service};
 use axum::{extract::State, routing::get, Json, Router};
-
 use tracing::instrument;
 
 /// A dummy endpoint for posts.

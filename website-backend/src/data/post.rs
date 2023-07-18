@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// A dummy post, just a placeholder for now.
 #[derive(Serialize, Deserialize, Clone, Debug)]
