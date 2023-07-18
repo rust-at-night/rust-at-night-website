@@ -1,0 +1,73 @@
+/* An example CSS file to test asset loading */;
+
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+h1 {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInMoveUp 8s ease-in-out infinite;
+    font-size: 4em;
+}
+
+@keyframes fadeInMoveUp {
+
+    0%,
+    50% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    25%,
+    75% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    body {
+        font-size: 0.8em;
+    }
+
+    h1 {
+        font-size: 1.2em;
+    }
+
+    .post {
+        width: 90%;
+    }
+}
+
+
+.posts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0;
+    list-style-type: none;
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    width: 70%;
+}
+

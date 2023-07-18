@@ -1,3 +1,5 @@
 # Website
 
-This repository consists of `rust-at-night` website frontend and backend crates.
+This repository consists of `rust-at-night` frontend and backend crates.
+
+More info coming soon..

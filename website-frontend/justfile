@@ -1,0 +1,8 @@
+clean: 
+  find . \( -name target -o -name target-trunk -o -name dist \) -type d | xargs rm -rf
+
+build:
+  trunk build
+
+watch: 
+  trunk watch

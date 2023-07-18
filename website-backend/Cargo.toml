@@ -1,0 +1,47 @@
+[package]
+name = "website-backend"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "website-backend"
+path = "src/main.rs"
+
+[lib]
+name = "website_backend_lib"
+path = "src/lib.rs"
+
+
+[dependencies]
+tokio = { version = "1.13", features = ["full"] }
+clap = { version = "4.1", features = ["derive", "env"] }
+axum = { version = "0.6", features = ["multipart"] }
+tower-http = { version = "0.4", features = ["trace", "cors", "fs"] }
+tower = { version = "0.4", features = ["util"] }
+hyper = "0.14"
+http-body = "0.4"
+
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+tracing-opentelemetry = { version = "0.19", optional = true }
+opentelemetry-jaeger = { version = "0.18", optional = true, features = ["collector_client", "reqwest_collector_client", "rt-tokio"] }
+opentelemetry = { version = "0.19", optional = true, features = ["rt-tokio"] }
+
+color-eyre = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+itertools = { workspace = true }
+thiserror = { workspace = true }
+camino = { workspace = true }
+async-trait = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+# The new api is complicated and includes features we don't use.
+base64 = { workspace = true }
+sha2 = { workspace = true }
+futures = { workspace = true }
+url = { workspace = true }
+bytes = { workspace = true }
+
+[features]
+tracing-jaeger = ["tracing-opentelemetry", "opentelemetry-jaeger", "opentelemetry"]
