@@ -18,7 +18,7 @@ clap = { version = "4.1", features = ["derive", "env"] }
 axum = { version = "0.6", features = ["multipart"] }
 tower-http = { version = "0.4", features = ["trace", "cors", "fs"] }
 tower = { version = "0.4", features = ["util"] }
-hyper = "0.14"
+hyper = { version = "0.14", features = ["full"] }
 http-body = "0.4"
 
 tracing = "0.1.37"
@@ -42,6 +42,9 @@ sha2 = { workspace = true }
 futures = { workspace = true }
 url = { workspace = true }
 bytes = { workspace = true }
+
+[dev-dependencies]
+serial_test = "2"
 
 [features]
 tracing-jaeger = ["tracing-opentelemetry", "opentelemetry-jaeger", "opentelemetry"]

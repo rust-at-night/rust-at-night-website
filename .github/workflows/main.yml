@@ -15,7 +15,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  test_recent_push:
+  test-recent-push:
     if: ${{ github.ref != 'refs/heads/main' }}
 
     # We don't want this behaviour on main branch so we nest it here.
@@ -26,7 +26,7 @@ jobs:
       # or the PR merge branch for a pull_request event (like refs/pull/:prNumber/merge).
       #
       # The `github.workflow` keeps this setting in the scope of the workflow.
-      group: ${{ github.workflow }}-${{ github.ref }}-test_recent_push
+      group: ${{ github.workflow }}-${{ github.ref }}-test-recent-push
       # For any new push to the same branch (regardless of whether a PR is open or not),
       # it will cancel the workflow runs associated with the previous push to that same branch,
       # because they share the same github.ref.
@@ -44,10 +44,21 @@ jobs:
           override: true
           components: rustfmt, clippy
 
+      - name: format-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+
       - name: clippy-check
         uses: actions-rs/cargo@v1
         with:
           command: clippy
+
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
 
   test:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -60,7 +71,18 @@ jobs:
           override: true
           components: rustfmt, clippy
 
+      - name: format-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+
       - name: clippy-check
         uses: actions-rs/cargo@v1
         with:
           command: clippy
+
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
