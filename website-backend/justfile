@@ -1,0 +1,14 @@
+run_tracing_server:
+   docker run -d -p6831:6831/udp -p6832:6832/udp -p16686:16686 -p14268:14268 jaegertracing/all-in-one:latest
+
+build: 
+   cargo build --bin website-backend
+build_release:
+    cargo build --bin website-backend --release
+
+run_with_tracing: 
+   cargo run --bin website-backend --features tracing-jaeger
+run_dev: 
+   cargo run --bin website-backend 
+run: 
+   cargo run --bin website-backend --release

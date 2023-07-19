@@ -1,0 +1,108 @@
+name: CI
+
+# Currently the CI is a place holder which only conducts a clippy check.
+
+on:
+  # The push event with branches specifies that the workflow should run on any push to the main branch.
+  push:
+    branches:
+      - main
+  # The pull_request event with types of opened, synchronize, and reopened specifies
+  # that the workflow should run when a pull request is created,
+  # when new commits are added to the branch of an existing pull request,
+  # and when a closed pull request is reopened.
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-recent-push:
+    if: ${{ github.ref != 'refs/heads/main' }}
+
+    # We don't want this behaviour on main branch so we nest it here.
+    concurrency:
+      # The group which will be effected from the concurrency settings.
+      #
+      # The `github.ref` will be the name of the branch or tag for a push event,
+      # or the PR merge branch for a pull_request event (like refs/pull/:prNumber/merge).
+      #
+      # The `github.workflow` keeps this setting in the scope of the workflow.
+      group: ${{ github.workflow }}-${{ github.ref }}-test-recent-push
+      # For any new push to the same branch (regardless of whether a PR is open or not),
+      # it will cancel the workflow runs associated with the previous push to that same branch,
+      # because they share the same github.ref.
+      #
+      # However it won't cancel workflows running on different branches or for different events,
+      # because they would have different github.ref values and thus belong to different concurrency groups.
+      cancel-in-progress: true
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install nightly toolchain for rustfmt
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+          override: true
+
+      - name: format-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+          toolchain: nightly
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - name: clippy-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  test:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install nightly toolchain for rustfmt
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+          override: true
+
+      - name: format-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: -- --check
+          toolchain: nightly
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+          override: true
+
+      - name: clippy-check
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test

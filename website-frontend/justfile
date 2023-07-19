@@ -1,0 +1,5 @@
+build:
+  trunk build
+
+watch: 
+  trunk watch
