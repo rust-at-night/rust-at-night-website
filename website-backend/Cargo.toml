@@ -6,8 +6,6 @@ description = "Backend for the rust-at-night website"
 repository = "https://github.com/rust-at-night/rust-at-night-website"
 readme = "../README.md"
 license = "MIT"
-license-file = "../LICENSE"
-
 
 [[bin]]
 name = "website-backend"
@@ -16,7 +14,6 @@ path = "src/main.rs"
 [lib]
 name = "website_backend_lib"
 path = "src/lib.rs"
-
 
 [dependencies]
 tokio = { version = "1.13", features = ["full"] }

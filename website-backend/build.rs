@@ -1,6 +1,5 @@
-use std::io::Write;
-
 use camino::Utf8PathBuf;
+use std::io::Write;
 
 fn main() {
     // Create a db for local development and tests if it doesn't exist.

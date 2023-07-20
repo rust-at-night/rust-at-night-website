@@ -3,22 +3,13 @@
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
-cargo install --locked wasm-bindgen-cli trunk just sqlx-cli
+# Install deps
+cargo install --locked wasm-bindgen-cli trunk just sqlx-cli sleek
 
-# Define the pre-commit hook
+# Define the pre-commit hook for enforced SQL formatting
 read -r -d '' PRE_COMMIT_HOOK <<'EOF'
-#!/bin/sh
-# Redirect output to stderr.
-exec 1>&2
-# Enable globbing.
-shopt -s globstar
-
-for file in $(git diff --cached --name-only | grep -E '\.sql$')
-do
-    pg_format --keyword-case 3 $file > formatted.sql
-    mv formatted.sql $file
-    git add $file
-done
+#!/bin/bash
+sleek --indent-spaces 4 --uppercase ./website-backend/migrations/**/*.sql
 EOF
 
 # Get the git directory (this works even in a git submodule)
@@ -33,7 +24,7 @@ echo "$PRE_COMMIT_HOOK" >"$GIT_DIR/hooks/pre-commit"
 # Make the hook executable
 chmod +x "$GIT_DIR/hooks/pre-commit"
 
-echo "Pre-commit hook for pg_format installed successfully."
+echo "Pre-commit hook installed successfully."
 
 rm -rf "$SCRIPT_DIR/website-backend/local" && mkdir -p "$SCRIPT_DIR/website-backend/local" && touch "$SCRIPT_DIR/website-backend/local/local.db"
 

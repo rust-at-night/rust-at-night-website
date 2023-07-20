@@ -1,7 +1,6 @@
+use crate::Options;
 use sqlx::{sqlite::SqlitePoolOptions, SqlitePool};
 use std::time::Duration;
-
-use crate::Options;
 
 /// Maximum number of concurrent connections to the database.
 ///
