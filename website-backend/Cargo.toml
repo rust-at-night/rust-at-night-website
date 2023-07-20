@@ -25,6 +25,7 @@ axum = { version = "0.6", features = ["multipart"] }
 tower-http = { version = "0.4", features = ["trace", "cors", "fs"] }
 tower = { version = "0.4", features = ["util"] }
 hyper = { version = "0.14", features = ["full"] }
+sqlx = { version = "0.7", features = [ "runtime-tokio", "tls-native-tls", "sqlite", "macros", "chrono" ] }
 http-body = "0.4"
 
 tracing = "0.1.37"
@@ -52,5 +53,11 @@ bytes = { workspace = true }
 [dev-dependencies]
 serial_test = "2"
 
+[build-dependencies]
+camino = { workspace = true }
+
 [features]
 tracing-jaeger = ["tracing-opentelemetry", "opentelemetry-jaeger", "opentelemetry"]
+
+[profile.dev.package.sqlx-macros]
+opt-level = 3

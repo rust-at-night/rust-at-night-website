@@ -1,3 +1,6 @@
+**/local/
+.sqlx
+
 # Rust
 **/debug/
 **/dist/

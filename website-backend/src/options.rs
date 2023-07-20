@@ -30,6 +30,9 @@ pub struct Options {
     #[clap(long, env = "STATIC_DIR", default_value = "../dist")]
     pub static_dir: Utf8PathBuf,
 
+    #[clap(long, env = "DATABASE_URL", default_value = "sqlite::memory:")]
+    pub database_url: String,
+
     #[clap(flatten)]
     pub aws: AwsOptions,
 
@@ -43,6 +46,7 @@ impl Options {
     /// Initializes a service from the given options.
     pub async fn make_service(&self) -> Result<()> {
         let state = Service::from_options(self)
+            .await
             .context("Making the service considering given options..")?;
 
         state.run().await.context("Running service")

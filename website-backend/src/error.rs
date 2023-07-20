@@ -7,12 +7,15 @@ use serde::{Deserialize, Serialize};
 use std::error::Error as StdError;
 use tracing::{event, Level};
 
+// Error handling strategy will be built on top of this pattern but also re-iterated in the future.
 #[derive(thiserror::Error, Debug)]
 #[non_exhaustive]
 pub enum Error {
     // Extend with error types and from implementations as needed..
-    #[error("error: {0}")]
-    InternalServerError(String),
+    #[error("{0}")]
+    Custom(String),
+    #[error("{0}")]
+    DatabaseInteraction(#[from] sqlx::Error),
 }
 
 impl Error {

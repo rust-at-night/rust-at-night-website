@@ -3,8 +3,8 @@ use serde::{Deserialize, Serialize};
 /// A dummy post, just a placeholder for now.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Post {
-    writer: String,
-    content: String,
+    pub writer: String,
+    pub content: String,
 }
 
 impl Post {
