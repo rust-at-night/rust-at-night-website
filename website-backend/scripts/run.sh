@@ -34,7 +34,7 @@ else
     # Instead there is a hack but it is quite dependent to the command output and should be replaced.
     if [[ "$RESTORE_OUTPUT" == *"no matching backups"* ]]; then
         echo "No backups found. Instead of restoring, creating an empty database."
-        mkdir -p /data && touch /data/db
+        mkdir -p /data && touch /data/main.db
     fi
 
 fi

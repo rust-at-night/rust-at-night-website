@@ -20,8 +20,15 @@ FROM debian:buster-slim
 ENV LS_DB_PATH=/data/db
 ENV LS_REPLICA_URL=s3://website-backend-db
 
+# Default value for container databse url
+ENV DATABASE_URL=sqlite:///data/main.db
+
 # Define the Litestream version
 ARG LITESTREAM_VERSION=0.3.9
+
+COPY ./data/ /data/
+COPY ./etc/ /etc/
+COPY ./scripts/run.sh /scripts/run.sh
 
 # Install system dependencies and Litestream
 RUN apt-get update && \
@@ -35,9 +42,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /usr/src/app/website-backend/target/release/website_backend /usr/local/bin
-COPY ./data/ /data/
-COPY ./etc/ /etc/
-COPY ./scripts/run.sh /scripts/run.sh
 CMD [ "/scripts/run.sh" ]
 
 EXPOSE 8081

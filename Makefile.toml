@@ -1,0 +1,92 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+DATABASE_URL = "sqlite://${CARGO_MAKE_WORKSPACE_WORKING_DIRECTORY}/website-backend/local/local.db"
+
+### Project Setup ###
+
+[tasks.setup]
+# Do not run this task for each member of the workspace
+workspace = false
+dependencies = [
+    "install-global-deps", 
+    "install-pre-commit-hook",
+    "setup-backend", 
+    "setup-frontend"
+    ]
+
+[tasks.install-global-deps]
+command = "cargo"
+# This is idempotent once the deps are installed.
+# If you'd like to update the deps, run `cargo install --force` on them.
+args = [
+    "install", "--locked", 
+    # Frontend
+    "wasm-bindgen-cli", 
+    "trunk", 
+    # Project tooling
+    "just", 
+    "sleek",
+    # Backend
+    "sqlx-cli", 
+    ]
+
+# Creates the local development temporary directory.
+# Not checked in to the version control.
+[tasks.create-backend-local]
+script = '''
+mkdir -p local
+# Create an empty db.
+[ -f local/local.db ] || echo "" > local/local.db
+'''
+cwd = "website-backend"
+
+# Runs migrations and prepares the database for compile time check in the backend.
+[tasks.prepare-backend-local-db]
+script = '''
+sqlx migrate run --source "migrations" &&
+cargo sqlx prepare
+'''
+cwd = "website-backend"
+
+# Installs the pre-commit hook for enforced tasks.
+[tasks.install-pre-commit-hook]
+script = '''
+read -r -d \'\' PRE_COMMIT_HOOK << \'EOF\'
+#!/bin/bash
+
+# Format all SQL files in the project before committing.
+sleek --indent-spaces 4 --uppercase ./website-backend/**/*.sql
+
+# Extend with enforced tasks if necessary..
+
+EOF
+
+# Get the git directory (this works even in a git submodule)
+GIT_DIR=$(git rev-parse --git-dir)
+
+# Create the hooks directory if it doesn't already exist
+mkdir -p "$GIT_DIR/hooks"
+
+# Write the hook
+echo "$PRE_COMMIT_HOOK" >"$GIT_DIR/hooks/pre-commit"
+
+# Make the hook executable
+chmod +x "$GIT_DIR/hooks/pre-commit"
+
+echo "Pre-commit hook installed successfully."
+'''
+
+[tasks.setup-backend]
+script = '''
+echo "Setting backend up.."
+'''
+dependencies = [
+    "create-backend-local", 
+    "prepare-backend-local-db"
+    ]
+
+[tasks.setup-frontend]
+script = '''
+echo "Frontend setup flow will be placed here."
+'''
+

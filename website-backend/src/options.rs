@@ -30,7 +30,7 @@ pub struct Options {
     #[clap(long, env = "STATIC_DIR", default_value = "../dist")]
     pub static_dir: Utf8PathBuf,
 
-    #[clap(long, env = "DATABASE_URL", default_value = "sqlite::memory:")]
+    #[clap(long, env = "DATABASE_URL", default_value = "sqlite://local/local.db")]
     pub database_url: String,
 
     #[clap(flatten)]
