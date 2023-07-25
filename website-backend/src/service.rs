@@ -1,5 +1,6 @@
 use crate::{
     api::{health, v1},
+    db::migrate_and_connect_to_db,
     Options,
 };
 use axum::{
@@ -10,8 +11,9 @@ use axum::{
     Router, Server,
 };
 use camino::Utf8PathBuf;
-use color_eyre::Result;
+use color_eyre::{eyre::Context, Result};
 use hyper::{Request, StatusCode};
+use sqlx::{Pool, Sqlite};
 use std::{net::SocketAddr, sync::Arc};
 use tokio::select;
 use tower::ServiceExt;
@@ -26,6 +28,7 @@ const DEFAULT_BODY_LIMIT: usize = 2 * 1024 * 1024;
 /// Holds the state of the service.
 pub struct ServiceInner {
     options: Options,
+    db: Arc<Pool<Sqlite>>,
     // Extend the state if necessary..
 }
 
@@ -41,9 +44,14 @@ impl std::ops::Deref for Service {
 
 impl Service {
     /// Makes the service from options.
-    pub fn from_options(options: &Options) -> Result<Self> {
+    pub async fn from_options(options: &Options) -> Result<Self> {
         Ok(Self(Arc::new(ServiceInner {
             options: options.clone(),
+            db: Arc::new(
+                migrate_and_connect_to_db(options)
+                    .await
+                    .context("Connecting to db..")?,
+            ),
         })))
     }
 
@@ -128,5 +136,10 @@ impl Service {
     #[must_use]
     pub fn options(&self) -> &Options {
         &self.options
+    }
+
+    #[must_use]
+    pub fn db(&self) -> Arc<Pool<Sqlite>> {
+        Arc::clone(&self.db)
     }
 }

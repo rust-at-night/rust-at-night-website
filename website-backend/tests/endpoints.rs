@@ -6,6 +6,7 @@ use axum::{
     body::Body,
     http::{Request, StatusCode},
 };
+use itertools::Itertools;
 use serde_json::Value;
 use serial_test::serial;
 use std::net::TcpListener;
@@ -23,7 +24,7 @@ fn test_health_endpoint() {
         tokio::spawn(async move {
             axum::Server::from_tcp(listener)
                 .unwrap()
-                .serve(app.into_make_service())
+                .serve(app.router().into_make_service())
                 .await
                 .unwrap();
         });
@@ -60,7 +61,7 @@ fn test_posts_endpoint() {
         tokio::spawn(async move {
             axum::Server::from_tcp(listener)
                 .unwrap()
-                .serve(app.into_make_service())
+                .serve(app.router().into_make_service())
                 .await
                 .unwrap();
         });
@@ -83,5 +84,13 @@ fn test_posts_endpoint() {
         let posts = serde_json::from_slice::<Vec<Post>>(&body).unwrap();
 
         assert!(!posts.is_empty());
+
+        let posts_from_ali = posts
+            .into_iter()
+            .filter(|post| post.writer == "ali")
+            .collect_vec();
+
+        // Also currently checks if the seeding is working correctly.
+        assert_eq!(posts_from_ali.len(), 3);
     });
 }

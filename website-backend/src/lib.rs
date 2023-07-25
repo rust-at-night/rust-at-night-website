@@ -22,7 +22,8 @@
     clippy::empty_structs_with_brackets,
     clippy::as_conversions,
     clippy::self_named_module_files,
-    clippy::cargo_common_metadata
+    clippy::cargo_common_metadata,
+    clippy::exhaustive_structs
 )]
 
 /// All api routes.
@@ -39,6 +40,9 @@ pub mod options;
 
 /// Service itself.
 pub mod service;
+
+/// Database connection.
+pub mod db;
 
 pub use error::Error;
 pub use options::Options;

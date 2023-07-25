@@ -6,4 +6,5 @@ SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
 source "$SCRIPT_DIR/env.sh"
 
-DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile -t "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/"${ORG_NAME}"."${IMAGE_NAME}"."${CURRENT_DATE}":git-"${GITHUB_SHA}"
+# IMPORTANT: These commands should be run in the root of the repository.
+DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile -t "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_REGION}".amazonaws.com/"${ORG_NAME}"."${IMAGE_NAME}"."${CURRENT_DATE}":git-"${GITHUB_SHA}" .

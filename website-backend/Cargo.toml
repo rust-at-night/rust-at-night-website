@@ -6,8 +6,6 @@ description = "Backend for the rust-at-night website"
 repository = "https://github.com/rust-at-night/rust-at-night-website"
 readme = "../README.md"
 license = "MIT"
-license-file = "../LICENSE"
-
 
 [[bin]]
 name = "website-backend"
@@ -17,7 +15,6 @@ path = "src/main.rs"
 name = "website_backend_lib"
 path = "src/lib.rs"
 
-
 [dependencies]
 tokio = { version = "1.13", features = ["full"] }
 clap = { version = "4.1", features = ["derive", "env"] }
@@ -25,6 +22,7 @@ axum = { version = "0.6", features = ["multipart"] }
 tower-http = { version = "0.4", features = ["trace", "cors", "fs"] }
 tower = { version = "0.4", features = ["util"] }
 hyper = { version = "0.14", features = ["full"] }
+sqlx = { version = "0.7", features = [ "runtime-tokio", "tls-native-tls", "sqlite", "macros", "chrono" ] }
 http-body = "0.4"
 
 tracing = "0.1.37"
@@ -52,5 +50,11 @@ bytes = { workspace = true }
 [dev-dependencies]
 serial_test = "2"
 
+[build-dependencies]
+camino = { workspace = true }
+
 [features]
 tracing-jaeger = ["tracing-opentelemetry", "opentelemetry-jaeger", "opentelemetry"]
+
+[profile.dev.package.sqlx-macros]
+opt-level = 3

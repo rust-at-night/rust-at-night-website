@@ -4,7 +4,7 @@ run_tracing_server:
 build: 
    cargo build --bin website-backend
 build_release:
-    cargo build --bin website-backend --release
+   cargo build --bin website-backend --release
 
 run_with_tracing: 
    cargo run --bin website-backend --features tracing-jaeger
@@ -12,3 +12,14 @@ run_dev:
    cargo run --bin website-backend 
 run: 
    cargo run --bin website-backend --release
+
+test:
+   cargo test
+test_debug: 
+   NOCAPTURE=1 cargo test
+
+sqlx_update:
+   DATABASE_URL="sqlite://{{justfile_directory()}}/local/local.db" sqlx migrate run --source "migrations" 
+   DATABASE_URL="sqlite://{{justfile_directory()}}/local/local.db" cargo sqlx prepare 
+
+
