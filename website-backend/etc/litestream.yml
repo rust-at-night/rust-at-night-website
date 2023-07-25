@@ -1,0 +1,10 @@
+# Litestream configuration file.
+
+dbs:
+  # Litestream will watch changes in this path.
+  # This path is the path to the SQLite db in the container.
+  - path: ${LS_DB_PATH}
+    replicas:
+      # The bucket URL which Litestream will record and restore snapshots.
+      # Example s3://<some-bucket>
+      - url: ${LS_REPLICA_URL}
